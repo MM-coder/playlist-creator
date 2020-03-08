@@ -54,7 +54,7 @@
         <div class="uk-container uk-container-small uk-flex-auto uk-text-center" data-uk-scrollspy="target: > .animate; cls: uk-animation-slide-bottom-small uk-invisible; delay: 300">
             <h1 class="uk-heading-primary animate uk-invisible" style="font-weight: 700;">Adicionar Música</h1>
             <div class="uk-width-4-5@m uk-margin-auto animate uk-invisible">
-                <form method="POST">
+                <form action="{{ url_for('add') }}" method="POST">
                     <div class="uk-margin uk-height-match">
                         <div class="uk-inline uk-width-4-5">
                             <span class="uk-form-icon" uk-icon="icon: bolt"></span>
