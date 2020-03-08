@@ -16,11 +16,12 @@ def check_login():
 def add_song_and_detect_service(url: str, username: str):
     result = urlparse(url)
     if (result.netloc == "www.youtube.com" or  result.netloc == "youtu.be") :
-        music.add_song_info_from_yt_url(url, username)
+        music.add_song_info_from_yt_id(music.get_id_from_url(url), username)
     elif (result.netloc == "open.spotify.com") :
         music.add_song_info_from_spotify_url(url, username)
     else:
-        abort(500)
+        abort(400)
+
 
 # Routes
 
@@ -35,8 +36,14 @@ def add():
     check_login()
     if request.form:
         add_song_and_detect_service(str(request.form['url']), session['logged_in']['user'])
-    return render_template('add.html')
+        return render_template('add.html', error=False, success=True, successtext="Musica adicionada com sucesso", user_songs=music.get_user_songs(session['logged_in']['user']))
+    return render_template('add.html', error=False, success=False, user_songs=music.get_user_songs(session['logged_in']['user']))
     
+@app.route('/delete/<name>')
+def delete(name):
+    check_login()
+    music.remove_song(name, session['logged_in']['user'])
+    return redirect(url_for('add'))
 
 @app.route('/login', methods=["GET", "POST"])
 def login():
@@ -61,6 +68,10 @@ def logout():
 @app.errorhandler(401)
 def handle_401_error(e):
     return render_template('login.html', error=True, errortext = "You need to be logged in to do that! (HTTP error 401)")
+
+@app.errorhandler(400)
+def handle_400_error(e):
+    return render_template('add.html', error=True, success=False, errortext = "Erro ao adicionar a musica, o link é inválido (HTTP error 400)", user_songs=music.get_user_songs(session['logged_in']['user']))
 
 if __name__ == "__main__":
     app.run()

@@ -2,6 +2,7 @@ import psycopg2, spotipy, youtube
 from urllib.parse import urlparse
 from spotipy.oauth2 import SpotifyClientCredentials
 from youtube import API
+import main
 
 url = "postgres://aohxordwzsnidl:0f5b748e243026e102f27babce51623f4350524ca7122606290cc4077c1c7b1e@ec2-54-195-247-108.eu-west-1.compute.amazonaws.com:5432/dcvdo3sgqr2bea"
 
@@ -33,10 +34,33 @@ def add_song_if_not_exists(name: str, duration: int, username: str, cover: str):
     user_count = c.fetchone()[0]
     if user_count < 1:
         print("[Songs Table] Creating entry  " + str(name))
-        c.execute("INSERT INTO Users VALUES (%s, %s, %s, %s)", (str(name), int(duration), str(username), str(cover)))
+        c.execute("INSERT INTO Songs VALUES (%s, %s, %s, %s)", (str(name), int(duration), str(username), str(cover)))
         db.commit()
     else:
         print("[Songs Table] Didn't add duplicate entry  " + str(name))
+
+def get_user_songs(username: str):
+    c.execute("SELECT * FROM Songs WHERE SubmittedBy=%s", (str(username),))
+    songs = c.fetchall()
+    return songs
+
+def get_all_songs():
+    c.execute("SELECT * FROM Songs")
+    songs = c.fetchall()
+    return songs
+        
+def get_song_creator(name: str):
+    c.execute("SELECT SubmittedBy FROM Songs WHERE Name=%s", (str(name),))
+    name = str(c.fetchone()[0])
+    return name
+
+def remove_song(name: str, username: str):
+    if get_song_creator(name) == username:
+        c.execute("DELETE from Songs WHERE name=%s", (str(name),))
+        db.commit()
+        print(f"[Songs Table] Deleted entry {name} by {username}")
+    else:
+        main.abort(403)
 
 # Spotify
 
@@ -76,7 +100,7 @@ def get_id_from_url(url: str):
         v_id = result.query.replace('v=', '')
         return v_id
 
-def add_song_info_from_yt_url(id: str, username: str):
+def add_song_info_from_yt_id(id: str, username: str):
     info = g.get('videos', id=id)
     name = info['items'][0]['snippet']['title']
     cover_url = info['items'][0]['snippet']['thumbnails']['maxres']['url']

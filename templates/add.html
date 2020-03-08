@@ -15,26 +15,60 @@
 </head>
 <body>
     <div class="uk-flex uk-flex-center uk-flex-middle uk-height-viewport uk-position-z-index uk-position-relative" data-uk-height-viewport="min-height: 400">
+        {% if error == True %}
+        <div class="uk-alert-danger uk-position-top" style = "z-index: 1" uk-alert>
+            <a class="uk-alert-close uk-icon uk-close" uk-close="" style="fill: black;color: black;"><svg width="14" height="14" viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg" data-svg="close-icon"><line fill="none" stroke="#000" stroke-width="1.1" x1="1" y1="1" x2="13" y2="13"></line><line fill="none" stroke="#000" stroke-width="1.1" x1="13" y1="1" x2="1" y2="13"></line></svg></a>
+            <p>{{ errortext }}</p>
+        </div>
+        {% endif %}
+        {% if success == True %}
+        <div class="uk-alert-success uk-position-top" style = "z-index: 1" uk-alert>
+            <a class="uk-alert-close uk-icon uk-close" uk-close="" style="fill: black;color: black;"><svg width="14" height="14" viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg" data-svg="close-icon"><line fill="none" stroke="#000" stroke-width="1.1" x1="1" y1="1" x2="13" y2="13"></line><line fill="none" stroke="#000" stroke-width="1.1" x1="13" y1="1" x2="1" y2="13"></line></svg></a>
+            <p>{{ successtext }}</p>
+        </div>
+        {% endif %}
         <!-- TEXT -->
         <div class="uk-container uk-container-small uk-flex-auto uk-text-center" data-uk-scrollspy="target: > .animate; cls: uk-animation-slide-bottom-small uk-invisible; delay: 300">
             <h1 class="uk-heading-primary animate uk-invisible" style="font-weight: 700;">Adicionar Música</h1>
             <div class="uk-width-4-5@m uk-margin-auto animate uk-invisible">
                 <form method="POST">
-                    <div class="uk-margin">
+                    <div class="uk-margin uk-height-match">
                         <div class="uk-inline uk-width-4-5">
                             <span class="uk-form-icon" uk-icon="icon: bolt"></span>
                             <input name="url" class="uk-input" type="text" placeholder="Link do youtube, spotify" required>
                         </div>
+                        <button class="uk-button uk-button-default" type="submit"><span uk-icon="check" style="padding: 9px;"></span></button>
                     </div>
-                    <button class="uk-button uk-button-default" type="submit">Submeter</button>
                 </form>
+            </div>
+            <div class="uk-margin-large-top">
+                <table class="uk-table uk-table-striped">
+                    <caption>Músicas que já submeteste</caption>
+                    <thead>
+                        <tr>
+                            <th><span uk-icon="image"></span></th>
+                            <th>Nome</th>
+                            <th>Duração</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in user_songs %}
+                        <tr>
+                            <td><img data-src="{{i[3]}}" width="20" height="20" alt="capa" uk-img></td>
+                            <td>{{i[0]}}</td>
+                            <td>{{i[1]}}</td>
+                            <td><a href="{{url_for('delete', name=i[0])}}" class="uk-icon-link" uk-icon="trash"></a></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
         <!-- /TEXT -->
         <!-- FOOT -->
         <div class="uk-position-bottom-center uk-position-small">
             <span class="uk-text-small uk-text-center">
-                <i class="fas fa-code"></i> by <a href="https://maurom.dev/">Mauro M.</a>
+                <i class="fas fa-terminal"></i> by <a href="https://maurom.dev/">Mauro M.</a>
             </span></a></span>
         </div>
         <!-- /FOOT -->
