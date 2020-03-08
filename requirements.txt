@@ -1,3 +1,5 @@
 psycopg2
 spotipy
 youtube-python
+flask
+gunicorn
