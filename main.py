@@ -52,6 +52,10 @@ def logout():
     return redirect(url_for('login'))
 
 
+@app.errorhandler(429)
+def handle_429_error(e):
+    return render_template('add.html', error=True, success=False, errortext = "Erro ao adicionar a música, não podes submeter mais de 5 músicas (HTTP error 429)", user_songs=music.get_user_songs(session['logged_in']['user']))
+
 @app.errorhandler(404)
 def handle_404_error(e):
     return render_template('404.html')

@@ -17,10 +17,10 @@
     <header>
         <div class="uk-container">
             <div class="uk-position-top">
-                <nav class="uk-navbar-container uk-navbar-transparent uk-light" style="margin: 10px;" uk-navbar>
+                <nav class="uk-navbar-container uk-navbar-transparent uk-dark" style="margin: 10px;" uk-navbar>
                     <div class="uk-navbar-left">
                         <ul class="uk-navbar-nav">
-                            <li class="uk-active"><a href="/"><span class="uk-icon uk-margin-small-right" uk-icon="icon: home"></span></a></li>
+                            <li><a href="/"><span class="uk-icon uk-margin-small-right" uk-icon="icon: home"></span></a></li>
                             <li><a href="{{ url_for('add') }}"><span class="uk-icon uk-margin-small-right" uk-icon="icon: cloud-upload"></span>Submeter</a></li>
                         </ul>
                     </div>
@@ -41,5 +41,37 @@
             </div>
         </div>
     </header>
+    <section class="uk-section uk-margin-large-top">
+        <div class="uk-card uk-card-hover uk-card-default uk-card-body uk-width-1-2@m" style="margin: 0 auto;">
+            <h3 class="uk-card-title">Sobre a plataforma</h3>
+            <p id = "reasons">A plataforma foi criada para facilitar a criação de uma playlist para a festa de final de 2º periodo</p>
+            <p>A plataforma está programada em HTML + CSS com um back-end de Flask (Python). Tem um login flow completamente custom com uma base de dados MongoDB. O <i>front-end</i> usa UIKit para o <i>styling</i>.</p>
+            <a href="https://getuikit.com/" class="uk-icon-button  uk-margin-small-right" uk-icon="uikit"></a>
+        </div>
+    </section>
+    <section class="uk-section">
+        <div class="uk-card uk-card-hover uk-card-default uk-card-body uk-width-1-2@m" style="margin: 0 auto;">
+            <h3 class="uk-card-title">Sobre mim</h3>
+            <p>Acho que me não necessito de apresentações. Fiz isto como forma de não ter de estudar avecs, eis o resultado de 4 horas de trabalho</p>
+            <a href="https://maurom.dev/" class="uk-icon-button uk-margin-small-right" uk-icon="link"></a>
+            <a href="https://github.com/MM-coder/" class="uk-icon-button uk-margin-small-right" uk-icon="github-alt"></a>
+            <a href="https://reddit.com/u/boringjelly" class="uk-icon-button  uk-margin-small-right" uk-icon="reddit"></a>
+            <a href="https://instagram.com/mauro.m.codes/" class="uk-icon-button  uk-margin-small-right" uk-icon="instagram"></a>
+            <a href="https://twitter.com/mauro_m_rants" class="uk-icon-button  uk-margin-small-right" uk-icon="twitter"></a>
+        </div>
+    </section>
+    <section class="uk-section">
+        <div class="uk-card uk-card-hover uk-card-default uk-card-body uk-width-1-2@m" style="margin: 0 auto;">
+            <h3 class="uk-card-title">Licença</h3>
+            <img src="https://mirrors.creativecommons.org/presskit/buttons/80x15/svg/by-nc-nd.svg" uk-svg>
+            <p>Este código está protegido e foi divulgado ao público sobre o abrigo da licença Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0) que pode ser consultada no website da Creative Commons. Qualquiser falha ao cumprir com os termos estipulados na licença vai ser alvo de ação legal pelo criador.</p>
+            <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" class="uk-icon-button uk-margin-small-right" uk-icon="link"></a>
+        </div>
+    </section>
+    <footer id="site-foot" class="uk-section uk-section-xsmall uk-dark" uk-sticky="bottom: true">
+        <div class="uk-container uk-text-small uk-text-center">
+            <i class="fas fa-terminal"></i> by <a href="https://maurom.dev/">Mauro M.</a>
+        </div>
+    </footer>
 </body>
 </html>

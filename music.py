@@ -1,8 +1,7 @@
-import psycopg2, spotipy, youtube
+import psycopg2, spotipy, youtube, users, main
 from urllib.parse import urlparse
 from spotipy.oauth2 import SpotifyClientCredentials
 from youtube import API
-import main
 
 url = "postgres://aohxordwzsnidl:0f5b748e243026e102f27babce51623f4350524ca7122606290cc4077c1c7b1e@ec2-54-195-247-108.eu-west-1.compute.amazonaws.com:5432/dcvdo3sgqr2bea"
 
@@ -40,13 +39,19 @@ def add_song_if_not_exists(name: str, duration: int, username: str, cover: str):
         print("[Songs Table] Didn't add duplicate entry  " + str(name))
 
 def add_song_and_detect_service(url: str, username: str):
-    result = urlparse(url)
-    if (result.netloc == "www.youtube.com" or  result.netloc == "youtu.be") :
-        add_song_info_from_yt_id(get_id_from_url(url), username)
-    elif (result.netloc == "open.spotify.com") :
-        add_song_info_from_spotify_url(url, username)
+    if users.get_uploaded_number(username) == 5:
+        main.abort(429)
     else:
-        main.abort(400)
+        result = urlparse(url)
+        if (result.netloc == "www.youtube.com" or  result.netloc == "youtu.be") :
+            add_song_info_from_yt_id(get_id_from_url(url), username)
+            users.add_uploaded_number(username)
+        elif (result.netloc == "open.spotify.com") :
+            add_song_info_from_spotify_url(url, username)
+            users.add_uploaded_number(username)
+        else:
+            main.abort(400)
+    
 
 def get_user_songs(username: str):
     c.execute("SELECT * FROM Songs WHERE SubmittedBy=%s", (str(username),))
@@ -67,6 +72,7 @@ def remove_song(name: str, username: str):
     if get_song_creator(name) == username:
         c.execute("DELETE from Songs WHERE name=%s", (str(name),))
         db.commit()
+        users.remove_uploaded_number(username)
         print(f"[Songs Table] Deleted entry {name} by {username}")
     else:
         main.abort(403)
@@ -119,7 +125,10 @@ def get_id_from_url(url: str):
 def add_song_info_from_yt_id(id: str, username: str):
     info = g.get('videos', id=id)
     name = info['items'][0]['snippet']['title']
-    cover_url = info['items'][0]['snippet']['thumbnails']['maxres']['url']
+    try:
+        cover_url = info['items'][0]['snippet']['thumbnails']['maxres']['url']
+    except KeyError:
+        cover_url = info['items'][0]['snippet']['thumbnails']['default']['url']
     second = g.get('videos', id=id, part="contentDetails") # Youtube only gives duration in a different request, god fuck 'em
     duration = float(second['items'][0]['contentDetails']['duration'].replace('PT', '').replace('S', '').replace('M', '.')) # shitty syntax yes
     add_song_if_not_exists(name, duration, username, cover_url)

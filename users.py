@@ -49,6 +49,30 @@ def get_admin_status(username: str):
     db.commit()
     return admin
 
+def get_uploaded_number(username: str):
+    # Returns number of songs uploaded for comparison to limit
+    c.execute("SELECT Submitted FROM Users WHERE Username=%s", (str(username),))
+    n = int(c.fetchone()[0])
+    db.commit()
+    return n
+
+def remove_uploaded_number(username: str):
+    n = int(get_uploaded_number(username) - 1)
+    c.execute("UPDATE Users SET Submitted=%s WHERE Username=%s", (n, str(username)))
+    db.commit()
+    return n
+
+def add_uploaded_number(username: str):
+    n = int(get_uploaded_number(username) + 1)
+    c.execute("UPDATE Users SET Submitted=%s WHERE Username=%s", (n, str(username)))
+    db.commit()
+    return n
+
+def set_uploaded_zero(username: str):
+    c.execute("UPDATE Users SET Submitted=%s WHERE Username=%s", (0, str(username)))
+    db.commit()
+    return 0
+
 def hash_plain_text(string: str):
     # Hashes plain text (for external use) to pass as argument for comparison
     hash_object = hashlib.md5(string.encode())
