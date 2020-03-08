@@ -52,6 +52,14 @@ def logout():
     return redirect(url_for('login'))
 
 
+@app.errorhandler(404)
+def handle_404_error(e):
+    return render_template('404.html')
+
+@app.errorhandler(500)
+def handle_500_error(e):
+    return render_template('500.html')
+
 @app.errorhandler(401)
 def handle_401_error(e):
     return render_template('login.html', error=True, errortext = "You need to be logged in to do that! (HTTP error 401)")

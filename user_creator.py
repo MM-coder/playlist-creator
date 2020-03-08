@@ -1,16 +1,36 @@
-import users
+import users, secrets
 
-# Settings
-raw = "f6pYBUgCTWtyRe3VhUVrLTt22CxQAJSZ6oqQszPhGEJqm94MmzeEjKQXvcngwcoGWYBF3awaKEpjBAGKdnN4vuYMaadgqPUEocSDs428WEfikxanjKBstTAz6bxnndgE"
-user ="admin"
+# Recursive user creator since I'm lazy
 
-# Logic
-password = users.hash_plain_text(raw)
-users.create_user_if_not_exists(user, password, True)
+with open('9b_acessos.txt', 'w+') as f:
+    for i in range(1, 17):
+        user = f"9b_{i}"
+        raw = secrets.token_urlsafe(6)
+        password = users.hash_plain_text(raw)
+        users.create_user_if_not_exists(user, password, False)
+        f.write(user + ':' + raw + '\n')
 
-# Output
-print("-"*32)
-print("Created user!")
-print(f"Username: {user}")
-print(f"Password: {password}")
-print("-"*32)
+with open('9a_acessos.txt', 'w+') as f:
+    for i in range(1, 18):
+        user = f"9a_{i}"
+        raw = secrets.token_urlsafe(6)
+        password = users.hash_plain_text(raw)
+        users.create_user_if_not_exists(user, password, False)
+        f.write(user + ':' + raw + '\n')
+
+# Create Admin Accounts (2 teachers, 1 random admin)
+
+with open('professores.txt', 'w+') as f:
+    for i in range(1, 3):
+        user = f"prof_{i}"
+        raw = secrets.token_urlsafe(6)
+        password = users.hash_plain_text(raw)
+        users.create_user_if_not_exists(user, password, True)
+        f.write(user + ':' + raw + '\n')
+
+with open('admin.txt', 'w+') as f:
+    user = "admin"
+    raw = secrets.token_urlsafe(126)
+    password = users.hash_plain_text(raw)
+    users.create_user_if_not_exists(user, password, True)
+    f.write(user + ':' + raw + '\n')
