@@ -1,47 +1,34 @@
-import flask, users, music, hashlib, os
+import flask, users, music, os
 from flask import Flask, redirect, url_for, render_template, request, session, abort, send_file
-from urllib.parse import urlparse
 
 app = Flask(__name__)
 app.secret_key = b"da 10 02 9f 93 50 df ff 08 0b"
-
-# Functions
-
-def check_login():
-    if 'logged_in' in session:
-        return True
-    else:
-        return abort(401)
-
-def add_song_and_detect_service(url: str, username: str):
-    result = urlparse(url)
-    if (result.netloc == "www.youtube.com" or  result.netloc == "youtu.be") :
-        music.add_song_info_from_yt_id(music.get_id_from_url(url), username)
-    elif (result.netloc == "open.spotify.com") :
-        music.add_song_info_from_spotify_url(url, username)
-    else:
-        abort(400)
-
 
 # Routes
 
 @app.route('/')
 def index():
-    check_login()
-    return render_template('index.html')
+    users.check_login()
+    all_songs =  music.get_all_songs() # So that I don't make 2 dB requests
+    return render_template('index.html', all_songs=all_songs, duration=f"{music.get_playlist_duration()}M", number=len(all_songs))
+
+@app.route('/about')
+def about():
+    users.check_login()
+    return render_template('info.html')
 
 
 @app.route('/add', methods=["GET", "POST"])
 def add():
-    check_login()
+    users.check_login()
     if request.form:
-        add_song_and_detect_service(str(request.form['url']), session['logged_in']['user'])
+        music.add_song_and_detect_service(str(request.form['url']), session['logged_in']['user'])
         return render_template('add.html', error=False, success=True, successtext="Musica adicionada com sucesso", user_songs=music.get_user_songs(session['logged_in']['user']))
     return render_template('add.html', error=False, success=False, user_songs=music.get_user_songs(session['logged_in']['user']))
     
 @app.route('/delete/<name>')
 def delete(name):
-    check_login()
+    users.check_login()
     music.remove_song(name, session['logged_in']['user'])
     return redirect(url_for('add'))
 

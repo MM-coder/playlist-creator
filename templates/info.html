@@ -17,10 +17,10 @@
     <header>
         <div class="uk-container">
             <div class="uk-position-top">
-                <nav class="uk-navbar-container uk-navbar-transparent uk-dark" style="margin: 10px;" uk-navbar>
+                <nav class="uk-navbar-container uk-navbar-transparent uk-light" style="margin: 10px;" uk-navbar>
                     <div class="uk-navbar-left">
                         <ul class="uk-navbar-nav">
-                            <li class="uk-active"><a href="/"><span class="uk-icon uk-margin-small-right" uk-icon="icon: home"></span>Home</a></li>
+                            <li class="uk-active"><a href="/"><span class="uk-icon uk-margin-small-right" uk-icon="icon: home"></span></a></li>
                             <li><a href="{{ url_for('add') }}"><span class="uk-icon uk-margin-small-right" uk-icon="icon: cloud-upload"></span>Submeter</a></li>
                         </ul>
                     </div>
@@ -41,45 +41,5 @@
             </div>
         </div>
     </header>
-    <section class="uk-section uk-margin-medium-top">
-        <div class="uk-container">
-            <h1 style="font-weight: 700;">Status Da <i>Playlist</i></h1>
-            <div class="uk-child-width-1-3@m uk-grid-small uk-grid-match" uk-grid>
-                <div>
-                    <div class="uk-card uk-card-default uk-card-body">
-                        <h3 class="uk-card-title">Número de Músicas</h3>
-                        <p style="font-weight: 700; font-size: 30px">{{ number }}</p>
-                    </div>
-                </div>
-                <div>
-                    <div class="uk-card uk-card-default uk-card-body">
-                        <h3 class="uk-card-title">Duração total</h3>
-                        <p style="font-weight: 700; font-size: 30px">{{ duration }}</p>
-                    </div>
-                </div>
-            </div>
-            <h1 style="font-weight: 700;">Lista de Músicas Submetidas</h1>
-            <table class="uk-table uk-table-striped">
-                <thead>
-                    <tr>
-                        <th><span uk-icon="image"></span></th>
-                        <th>Nome</th>
-                        <th>Duração</th>
-                        <th>Submetido por</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for i in all_songs %}
-                    <tr>
-                        <td><img data-src="{{i[3]}}" alt="capa" style="object-fit: cover; width: 25px; height: 25px;" uk-img></td>
-                        <td>{{i[0]}}</td>
-                        <td>{{i[1]}}</td>
-                        <td>{{i[2]}}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </section>
 </body>
 </html>

@@ -22,7 +22,7 @@ db = psycopg2.connect(
 c = db.cursor()
 c.execute("""CREATE TABLE IF NOT EXISTS Songs(
                       Name TEXT,
-                      Duration INTEGER,
+                      Duration REAL,
                       SubmittedBy TEXT,
                       AlbumCoverUrl TEXT)""")
 
@@ -34,10 +34,19 @@ def add_song_if_not_exists(name: str, duration: int, username: str, cover: str):
     user_count = c.fetchone()[0]
     if user_count < 1:
         print("[Songs Table] Creating entry  " + str(name))
-        c.execute("INSERT INTO Songs VALUES (%s, %s, %s, %s)", (str(name), int(duration), str(username), str(cover)))
+        c.execute("INSERT INTO Songs VALUES (%s, %s, %s, %s)", (str(name), float(duration), str(username), str(cover)))
         db.commit()
     else:
         print("[Songs Table] Didn't add duplicate entry  " + str(name))
+
+def add_song_and_detect_service(url: str, username: str):
+    result = urlparse(url)
+    if (result.netloc == "www.youtube.com" or  result.netloc == "youtu.be") :
+        add_song_info_from_yt_id(get_id_from_url(url), username)
+    elif (result.netloc == "open.spotify.com") :
+        add_song_info_from_spotify_url(url, username)
+    else:
+        main.abort(400)
 
 def get_user_songs(username: str):
     c.execute("SELECT * FROM Songs WHERE SubmittedBy=%s", (str(username),))
@@ -61,6 +70,13 @@ def remove_song(name: str, username: str):
         print(f"[Songs Table] Deleted entry {name} by {username}")
     else:
         main.abort(403)
+
+def get_playlist_duration(): # Shitty Workaround time
+    iterable = get_all_songs()
+    l = []
+    for i in iterable:
+        l.append(i[1])
+    return sum(l)
 
 # Spotify
 

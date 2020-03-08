@@ -1,4 +1,4 @@
-import psycopg2, hashlib
+import psycopg2, hashlib, main
 from urllib.parse import urlparse
 
 url = "postgres://aohxordwzsnidl:0f5b748e243026e102f27babce51623f4350524ca7122606290cc4077c1c7b1e@ec2-54-195-247-108.eu-west-1.compute.amazonaws.com:5432/dcvdo3sgqr2bea"
@@ -53,3 +53,11 @@ def hash_plain_text(string: str):
     # Hashes plain text (for external use) to pass as argument for comparison
     hash_object = hashlib.md5(string.encode())
     return hash_object.hexdigest()
+
+# Post-Login Functions
+
+def check_login():
+    if 'logged_in' in main.session:
+        return True
+    else:
+        return main.abort(401)
