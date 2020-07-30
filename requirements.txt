@@ -3,3 +3,4 @@ spotipy
 youtube-python
 flask
 gunicorn
+youtube_dl

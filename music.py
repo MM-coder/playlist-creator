@@ -1,9 +1,12 @@
-import psycopg2, spotipy, youtube, users, main
+import psycopg2, spotipy, youtube, users, main, zipfile as z, os, youtube_dl
 from urllib.parse import urlparse
 from spotipy.oauth2 import SpotifyClientCredentials
 from youtube import API
 
-url = "postgres://aohxordwzsnidl:0f5b748e243026e102f27babce51623f4350524ca7122606290cc4077c1c7b1e@ec2-54-195-247-108.eu-west-1.compute.amazonaws.com:5432/dcvdo3sgqr2bea"
+# Variables
+
+progress = 0
+url = ""
 
 # Database
 
@@ -77,6 +80,15 @@ def remove_song(name: str, username: str):
     else:
         main.abort(403)
 
+def remove_all_song_from_user(username: str):
+    c.execute("DELETE from Songs WHERE SubmittedBy=%s", (str(username),))
+    db.commit()
+    
+def get_id_from_name(name: str):
+    r =  g.get('search', q=name)
+    return r['items'][0]['id']['videoId']
+
+
 def get_playlist_duration(): # Shitty Workaround time
     iterable = get_all_songs()
     l = []
@@ -132,3 +144,49 @@ def add_song_info_from_yt_id(id: str, username: str):
     second = g.get('videos', id=id, part="contentDetails") # Youtube only gives duration in a different request, god fuck 'em
     duration = float(second['items'][0]['contentDetails']['duration'].replace('PT', '').replace('S', '').replace('M', '.')) # shitty syntax yes
     add_song_if_not_exists(name, duration, username, cover_url)
+
+
+# Export
+
+def download_mp3_from_id(v_id: str):
+    ydl_opts = {
+        'format': 'bestaudio/best',
+            'postprocessors': [{
+            'key': 'FFmpegExtractAudio',
+            'preferredcodec': 'mp3',
+            'preferredquality': '192',
+        }],
+    }
+    with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+        l = [v_id]
+        ydl.download(l)
+
+
+def get_all_file_paths():
+    file_paths = [] 
+    directory = "./"
+    for root, directories, files in os.walk(directory): 
+        for filename in files:
+            if 'mp3' in filename:
+                filepath = os.path.join(root, filename) 
+                file_paths.append(filepath)
+    print(directories)
+    return file_paths 
+
+def create_zip_file():
+    file_paths = get_all_file_paths()
+    with z.ZipFile('songs.zip','w') as zip: 
+    # writing each file one by one 
+        for file in file_paths: 
+            zip.write(file) 
+
+
+def dl_all_songs_and_create_zip():
+    global progress
+    songs = get_all_songs()
+    progress = 10
+    for i in songs:
+        download_mp3_from_id(get_id_from_name(i))
+    progress = 50
+    create_zip_file()
+    progress = 100

@@ -1,5 +1,5 @@
-import flask, users, music, os
-from flask import Flask, redirect, url_for, render_template, request, session, abort, send_file
+import flask, users, music, os, time
+from flask import Flask, redirect, url_for, render_template, request, session, abort, send_file, Response
 
 app = Flask(__name__)
 app.secret_key = b"da 10 02 9f 93 50 df ff 08 0b"
@@ -51,10 +51,22 @@ def logout():
     session.pop('logged_in') # Just Remove everything from session 
     return redirect(url_for('login'))
 
+@app.route('/admin/export')
+def export():
+    return render_template('export.html')
+
+@app.route('/api/progress')
+def progress():
+    def progress_numb():
+        while 1:
+            progress = music.progress
+            yield "data:" + str(progress) + "\n\n"
+            time.sleep(0.5)
+    return Response(progress_numb(), mimetype= 'text/event-stream')
 
 @app.errorhandler(429)
 def handle_429_error(e):
-    return render_template('add.html', error=True, success=False, errortext = "Erro ao adicionar a música, não podes submeter mais de 5 músicas (HTTP error 429)", user_songs=music.get_user_songs(session['logged_in']['user']))
+    return render_template('add.html', error=True, success=False, errortext = "Erro ao adicionar a música, não podes submeter mais de 4 músicas (HTTP error 429)", user_songs=music.get_user_songs(session['logged_in']['user']))
 
 @app.errorhandler(404)
 def handle_404_error(e):

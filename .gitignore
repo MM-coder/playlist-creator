@@ -5,6 +5,7 @@
 # Custom added
 
 tests/
+cleanup.py
 
 ### Flask ###
 instance/*
