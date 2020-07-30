@@ -1,9 +1,11 @@
-# PlayList Creator by Mauro M.
+# Playlist Creator by Mauro M.
 
 Allows multiple users to create a single playlist. Was originally intened for a party. It allows each user to submit 3 songs to a playlist, by submitting a Spotify or Youtube link, the program then stores said links to a database.
 
 ## Screenshots
 
+![index](https://raw.githubusercontent.com/MM-coder/playlist-creator/master/.github/screenshots/index.png?token=AFN6RUGXAKQLSEXULVON4SS7FRIMU)
+![submit](https://raw.githubusercontent.com/MM-coder/playlist-creator/master/.github/screenshots/submit.png?token=AFN6RUCDWU7YNM6C6GXIWRK7FRIOY)
 
 ## Deployment Instructions
 The program is ready for deployment to [heroku](https://herokuapp.com) 
