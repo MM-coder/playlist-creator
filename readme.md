@@ -4,8 +4,8 @@ Allows multiple users to create a single playlist. Was originally intened for a 
 
 ## Screenshots
 
-![index](https://raw.githubusercontent.com/MM-coder/playlist-creator/master/.github/screenshots/index.png?token=AFN6RUGXAKQLSEXULVON4SS7FRIMU)
-![submit](https://raw.githubusercontent.com/MM-coder/playlist-creator/master/.github/screenshots/submit.png?token=AFN6RUCDWU7YNM6C6GXIWRK7FRIOY)
+![index](https://raw.githubusercontent.com/MM-coder/playlist-creator/master/.github/screenshots/index.png)
+![submit](https://raw.githubusercontent.com/MM-coder/playlist-creator/master/.github/screenshots/submit.png)
 
 ## Deployment Instructions
 The program is ready for deployment to [heroku](https://herokuapp.com) 
@@ -18,7 +18,7 @@ The program is ready for deployment to [heroku](https://herokuapp.com)
 
 ## Not Implemeted
 
-[] Exporting of playlist to MP3 using `youtube_dl` (requires bug testing)
+[x] Exporting of playlist to MP3 using `youtube_dl` (requires bug testing)
 
 ## License
 
